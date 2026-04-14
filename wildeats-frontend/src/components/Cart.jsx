@@ -20,7 +20,7 @@ export default function Cart() {
     return (
         <>
             <NavBar />
-
+ 
             <div className="cart-container">
                 <h2>Shopping Cart</h2>
                 {cartItems.length === 0 ? (
