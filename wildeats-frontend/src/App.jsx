@@ -12,19 +12,19 @@ import { CartProvider } from "./components/CartProvider";
 
 function App() {
   return (
-    <CartProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <CartProvider>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/browse-shop" element={<BrowseShop />} />
-          <Route path="/menu-list" element={<MenuList />} />
+          <Route path="/menu-list/:shopId" element={<MenuList />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
-      </BrowserRouter>
-    </CartProvider>
+      </CartProvider>
+    </BrowserRouter>
   );
 }
 

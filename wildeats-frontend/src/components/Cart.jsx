@@ -1,160 +1,64 @@
-import { useState } from "react";
-import Navbar from "./NavBar";
+import React from "react";
+import NavBar from "./NavBar";
+import { useCart } from "./CartProvider";
 
-function Cart() {
-  // sample cart data (later this comes from BrowseShop / context / localStorage)
-  const [cart, setCart] = useState([
-    {
-      id: 1,
-      name: "Burger",
-      price: 120,
-      quantity: 1
-    },
-    {
-      id: 2,
-      name: "Pizza",
-      price: 250,
-      quantity: 2
-    }
-  ]);
+export default function Cart() {
+  const { cart, increaseQty, decreaseQty, removeFromCart } = useCart();
 
-  // increase quantity
-  const increaseQty = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
-  };
-
-  // decrease quantity
-  const decreaseQty = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  // remove item
-  const removeItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
-  };
-
-  // compute total
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  // checkout
-  const checkout = () => {
-    alert("Order placed successfully! 🎉");
-    setCart([]);
-  };
+  const total = cart
+    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+    .toFixed(2);
 
   return (
-    <div>
-      <Navbar />
+    <>
+      <NavBar />
 
-      <h2 style={{ textAlign: "center" }}>🛒 Your Cart</h2>
+      <div className="cart-container">
+        <h2 className="title"> Cart </h2>
 
-      <div style={styles.container}>
         {cart.length === 0 ? (
-          <h3 style={{ textAlign: "center" }}>Cart is empty 😢</h3>
+          <p className="cart-empty">Your cart is empty</p>
         ) : (
           <>
             {cart.map((item) => (
-              <div key={item.id} style={styles.card}>
-                <div>
-                  <h3>{item.name}</h3>
-                  <p>₱{item.price}</p>
-                </div>
+              <div key={item.id} className="cart-item flex-between">
+                <div className="cart-left">
+                  <img src={item.image} className="cart-img"/>
 
-                <div style={styles.controls}>
+                  <div>
+                    <h3>{item.name}</h3>
+                    <p className="text-pink">₱{item.price}</p>
+                  </div>
+                </div>
+                
+
+                <div className="cart-controls flex">
                   <button onClick={() => decreaseQty(item.id)}>-</button>
                   <span>{item.quantity}</span>
                   <button onClick={() => increaseQty(item.id)}>+</button>
                 </div>
 
-                <div>
-                  <strong>₱{item.price * item.quantity}</strong>
+                <div className="flex">
+                  <p>₱{item.price * item.quantity}</p>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="btn-remove-cart"
+                  >
+                    <svg fill="#F4C522" width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z"></path></g></svg>
+                  </button>
                 </div>
 
-                <button
-                  style={styles.removeBtn}
-                  onClick={() => removeItem(item.id)}
-                >
-                  Remove
-                </button>
               </div>
             ))}
 
-            {/* TOTAL SECTION */}
-            <div style={styles.totalBox}>
-              <h2>Total: ₱{total}</h2>
-              <button style={styles.checkoutBtn} onClick={checkout}>
-                Checkout
-              </button>
+            <div className="cart-total">
+              <strong>Total: ₱{total}</strong>
             </div>
+
+            <button className="btn btn-pink btn-checkout"> Checkout Order </button>
           </>
         )}
       </div>
-    </div>
+    </>
   );
 }
-
-const styles = {
-  container: {
-    width: "80%",
-    margin: "auto",
-    marginTop: "20px"
-  },
-
-  card: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-    marginBottom: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "10px",
-    backgroundColor: "white"
-  },
-
-  controls: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px"
-  },
-
-  removeBtn: {
-    backgroundColor: "red",
-    color: "white",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "5px",
-    cursor: "pointer"
-  },
-
-  totalBox: {
-    marginTop: "20px",
-    textAlign: "right"
-  },
-
-  checkoutBtn: {
-    backgroundColor: "green",
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px"
-  }
-};
-
-export default Cart;

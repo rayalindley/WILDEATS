@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Campus Kitchen"
+  },
+  {
+    "id": 2,
+    "name": "Grill & Sizzle"
+  },
+  {
+    "id": 3,
+    "name": "Brew & Blend"
+  },
+  {
+    "id": 4,
+    "name": "Snack Shack"
+  },
+  {
+    "id": 5,
+    "name": "Street Bites"
+  },
+  {
+    "id": 6,
+    "name": "Tokyo Bites"
+  },
+  {
+    "id": 7,
+    "name": "Daily Bread"
+  }
+]

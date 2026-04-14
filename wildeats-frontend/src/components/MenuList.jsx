@@ -1,38 +1,41 @@
-import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Navbar from "./NavBar";
-import ShopService from "../services/ShopService";
+import menuData from "../data/menu.json";
+import { useCart } from "./CartProvider";
 
 function MenuList() {
-  const [menu, setMenu] = useState([]);
+  const { shopId } = useParams();
+  const { addToCart } = useCart();
 
-  useEffect(() => {
-    ShopService.getAllProducts()
-      .then(res => setMenu(res.data))
-      .catch(err => console.log(err));
-  }, []);
+  const menu = menuData.filter(item => item.shopId === Number(shopId));
 
   return (
     <div>
       <Navbar />
-      <h2 style={{ textAlign: "center" }}>Menu List</h2>
 
-      <ul style={styles.list}>
-        {menu.map(item => (
-          <li key={item.id}>
-            {item.name} - ₱{item.price}
-          </li>
-        ))}
-      </ul>
+      <div className="container">
+        <h2 className="title">Menu</h2>
+
+        <div className="grid">
+          {menu.map(item => (
+            <div key={item.id} className="card">
+
+              <h3>{item.name}</h3>
+              <p className="text-pink">₱{item.price}</p>
+
+              <button
+                className="btn btn-pink"
+                onClick={() => addToCart(item)}
+              >
+                Add to Cart
+              </button>
+
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
-
-const styles = {
-  list: {
-    textAlign: "center",
-    listStyle: "none",
-    padding: 0
-  }
-};
 
 export default MenuList;
