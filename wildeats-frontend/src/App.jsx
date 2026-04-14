@@ -5,12 +5,16 @@ import BrowseShop from './components/BrowseShop';
 import MenuList from './components/MenuList';
 import Cart from './components/Cart';
 import Home from './components/Home';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/browse-shop" element={<BrowseShop />} />
         <Route path="/menu-list" element={<MenuList />} />

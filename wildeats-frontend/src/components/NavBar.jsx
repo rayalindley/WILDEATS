@@ -24,6 +24,8 @@ const Navbar = () => {
             </a>
 
             <button className="logout-btn">Logout</button>
+            <a href="/login"><button className="logout-btn"> Login </button></a>
+            <a href="/register"><button className="logout-btn"> Register </button></a>
         </div>
         </nav>
   );
