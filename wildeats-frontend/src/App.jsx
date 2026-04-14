@@ -1,26 +1,30 @@
 import './App.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Dashboard from "./components/Dashboard"
+
+import Dashboard from "./components/Dashboard";
 import BrowseShop from './components/BrowseShop';
 import MenuList from './components/MenuList';
 import Cart from './components/Cart';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
+import { CartProvider } from "./components/CartProvider";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/browse-shop" element={<BrowseShop />} />
-        <Route path="/menu-list" element={<MenuList />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/browse-shop" element={<BrowseShop />} />
+          <Route path="/menu-list" element={<MenuList />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 
