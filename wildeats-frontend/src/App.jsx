@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import { CartProvider } from "./components/CartProvider";
+import MyOrders from './components/MyOrders';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/browse-shop" element={<BrowseShop />} />
           <Route path="/menu-list/:shopId" element={<MenuList />} />
+          <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
       </CartProvider>

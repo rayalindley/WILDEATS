@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import Navbar from "./NavBar";
 
 const shops = [
   { id:1, name:"The Canteen", cuisine:"Rice Meals · All-Day", description:"Your go-to for hearty Filipino comfort food. Hot meals served fresh every day.", emoji:"🍱", rating:4.8, reviewCount:312, deliveryTime:"10–15 min", isOpen:true, tag:"Best Seller", priceRange:"₱40–₱120", category:"Rice Meals", location:"Building A, Ground Floor" },
@@ -155,22 +156,7 @@ export default function BrowseStalls() {
       )}
       <div className="page">
 
-        {/* NAVBAR */}
-        <nav className="navbar">
-          <div className="container nav-inner">
-            <div className="logo">
-              <div className="logo-mark">🐾</div>
-              <span>Wild<b>Eats</b></span>
-            </div>
-            <div className="nav-links">
-              <span className="nav-link">Home</span>
-              <span className="nav-link on">Browse Stalls</span>
-              <span className="nav-link">My Orders</span>
-              <span className="nav-link">🛒 <span className="cbadge">2</span></span>
-              <button className="nav-btn">Sign In</button>
-            </div>
-          </div>
-        </nav>
+        <Navbar />
 
         {/* BROWSE HEADER */}
         <div className="browse-header">

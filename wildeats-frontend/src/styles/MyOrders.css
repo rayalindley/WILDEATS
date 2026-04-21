@@ -1,0 +1,123 @@
+/* ================= MY ORDERS ================= */
+
+.orders-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px;
+}
+
+.orders-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #8A252C;
+  margin-bottom: 5px;
+}
+
+.orders-sub {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ORDER CARD */
+.order-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+}
+
+/* HEADER */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.order-shop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-emoji {
+  font-size: 24px;
+}
+
+/* STATUS */
+.order-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.order-status.delivered {
+  background: #d4edda;
+  color: #155724;
+}
+
+.order-status.preparing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.order-status.pending {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ITEMS */
+.order-items {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* FOOTER */
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.reorder-btn {
+  background: #8A252C;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reorder-btn:hover {
+  background: #F4C522;
+  color: black;
+}
+
+/* EMPTY */
+.empty-orders {
+  text-align: center;
+  margin-top: 50px;
+  color: #888;
+}

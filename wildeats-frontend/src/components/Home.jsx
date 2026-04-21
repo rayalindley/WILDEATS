@@ -216,7 +216,7 @@ export default function WildEatsHome() {
         <Navbar />
 
         {/* NAVBAR */}
-        <nav className="navbar">
+        {/* <nav className="navbar">
           <div className="container nav-inner">
             <a href="#" className="logo">
               <div className="logo-mark">🐾</div>
@@ -236,7 +236,7 @@ export default function WildEatsHome() {
               </li>
             </ul>
           </div>
-        </nav>
+        </nav> */}
 
         {/* HERO */}
         <section className="hero">
