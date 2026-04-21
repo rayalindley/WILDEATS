@@ -1,30 +1,92 @@
 [
   {
     "id": 1,
-    "name": "Campus Kitchen"
+    "name": "The Canteen",
+    "cuisine": "Rice Meals · All-Day",
+    "description": "Your go-to for hearty Filipino comfort food. Hot meals served fresh every day.",
+    "emoji": "🍱",
+    "rating": 4.8,
+    "reviewCount": 312,
+    "deliveryTime": "10–15 min",
+    "isOpen": true,
+    "tag": "Best Seller",
+    "priceRange": "₱40–₱120",
+    "category": "Rice Meals",
+    "location": "Building A, Ground Floor"
   },
   {
     "id": 2,
-    "name": "Grill & Sizzle"
+    "name": "Munchies Corner",
+    "cuisine": "Snacks · Kakanin · Drinks",
+    "description": "Affordable snacks and local sweets perfect for those in-between class cravings.",
+    "emoji": "🧁",
+    "rating": 4.7,
+    "reviewCount": 198,
+    "deliveryTime": "5–10 min",
+    "isOpen": true,
+    "tag": "Student Fave",
+    "priceRange": "₱15–₱60",
+    "category": "Snacks",
+    "location": "Building B, Lobby"
   },
   {
     "id": 3,
-    "name": "Brew & Blend"
+    "name": "Brew & Bites",
+    "cuisine": "Coffee · Sandwiches · Pastries",
+    "description": "Artisan coffee and fresh sandwiches to power through your study sessions.",
+    "emoji": "☕",
+    "rating": 4.9,
+    "reviewCount": 445,
+    "deliveryTime": "8–12 min",
+    "isOpen": true,
+    "tag": "Top Rated",
+    "priceRange": "₱35–₱120",
+    "category": "Café",
+    "location": "Library Building, G/F"
   },
   {
     "id": 4,
-    "name": "Snack Shack"
+    "name": "Grill House",
+    "cuisine": "BBQ · Isaw · Ihaw-Ihaw",
+    "description": "Classic Filipino street grill favorites. Perfectly charred, always satisfying.",
+    "emoji": "🍢",
+    "rating": 4.6,
+    "reviewCount": 267,
+    "deliveryTime": "15–20 min",
+    "isOpen": true,
+    "tag": "Open Late",
+    "priceRange": "₱10–₱80",
+    "category": "Grill",
+    "location": "Back Court Area"
   },
   {
     "id": 5,
-    "name": "Street Bites"
+    "name": "Noodle Bar",
+    "cuisine": "Mami · Pansit · Lugaw",
+    "description": "Warm noodle soups and stir-fries that hit different on a long school day.",
+    "emoji": "🍜",
+    "rating": 4.5,
+    "reviewCount": 153,
+    "deliveryTime": "10–18 min",
+    "isOpen": false,
+    "tag": "Opens 10AM",
+    "priceRange": "₱35–₱95",
+    "category": "Noodles",
+    "location": "Covered Court, Stall 3"
   },
   {
     "id": 6,
-    "name": "Tokyo Bites"
-  },
-  {
-    "id": 7,
-    "name": "Daily Bread"
+    "name": "Sip & Chill",
+    "cuisine": "Milk Tea · Fruit Shakes · Soda",
+    "description": "Cold drinks for hot days. Build your own milk tea or grab a fresh shake.",
+    "emoji": "🧋",
+    "rating": 4.7,
+    "reviewCount": 389,
+    "deliveryTime": "5–10 min",
+    "isOpen": true,
+    "tag": "Fan Favorite",
+    "priceRange": "₱30–₱85",
+    "category": "Drinks",
+    "location": "Building C, G/F"
   }
 ]
