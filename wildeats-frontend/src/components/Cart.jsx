@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "./NavBar";
 import { useCart } from "./CartProvider";
 
 export default function Cart() {
   const { cart, increaseQty, decreaseQty, removeFromCart } = useCart();
 
+  const [toast, setToast] = useState(null);
+
   const total = cart
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
     .toFixed(2);
 
+  const handleCheckout = () => {
+    setToast("Order checkout successful!");
+    setTimeout(() => setToast(null), 3000);
+  };
+
   return (
     <>
+      {toast && (
+        <div style={{position:'fixed',top:80,left:'50%',transform:'translateX(-50%)',background:'#1C1C1C',color:'#fff',padding:'12px 24px',borderRadius:12,fontWeight:600,fontSize:'.88rem',zIndex:9999,boxShadow:'0 8px 28px rgba(0,0,0,.25)',whiteSpace:'nowrap'}}>
+          {toast}
+        </div>
+      )}
       <NavBar />
 
       <div className="cart-container">
@@ -55,7 +67,7 @@ export default function Cart() {
               <strong>Total: ₱{total}</strong>
             </div>
 
-            <button className="btn btn-pink btn-checkout"> Checkout Order </button>
+            <button className="btn btn-pink btn-checkout" onClick={handleCheckout}> Checkout Order </button>
           </>
         )}
       </div>
