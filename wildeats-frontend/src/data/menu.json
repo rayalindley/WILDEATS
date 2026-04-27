@@ -36,41 +36,39 @@
   },
   {
     "id": 6,
-    "name": "Extra Rice",
+    "name": "Rice",
     "price": 20,
     "image": "/assets/rice.jpg",
     "shopId": 1
   },
-
   {
     "id": 7,
-    "name": "Pork BBQ",
+    "name": "Maja Blanca",
     "price": 100,
-    "image": "/assets/bbq.jpg",
+    "image": "/assets/maja-blanca.jpg",
     "shopId": 2
   },
   {
     "id": 8,
-    "name": "Grilled Chicken",
+    "name": "Cassava Cake",
     "price": 140,
-    "image": "/assets/grilled-chicken.jpg",
+    "image": "/assets/cassava-cake.jpg",
     "shopId": 2
   },
   {
     "id": 9,
-    "name": "Liempo",
+    "name": "Puto Bumbong",
     "price": 150,
-    "image": "/assets/liempo.jpg",
+    "image": "/assets/puto-bumbong.jpg",
     "shopId": 2
   },
   {
     "id": 10,
-    "name": "Burger Steak",
+    "name": "Banana Cue",
     "price": 120,
-    "image": "/assets/burger-steak.jpg",
+    "image": "/assets/banana-cue.jpg",
     "shopId": 2
   },
-
   {
     "id": 11,
     "name": "Classic Milk Tea",
@@ -106,43 +104,41 @@
     "image": "/assets/frappe.jpg",
     "shopId": 3
   },
-
   {
     "id": 16,
-    "name": "Fries",
+    "name": "Pork BBQ",
     "price": 80,
-    "image": "/assets/fries.jpg",
+    "image": "/assets/pork-bbq.jpg",
     "shopId": 4
   },
   {
     "id": 17,
-    "name": "Cheeseburger",
+    "name": "Chicken Inasal",
     "price": 110,
-    "image": "/assets/burger.jpg",
+    "image": "/assets/chicken-inasal.jpg",
     "shopId": 4
   },
   {
     "id": 18,
-    "name": "Hotdog Sandwich",
+    "name": "Grilled Cheeseburger",
     "price": 65,
-    "image": "/assets/hotdog.jpg",
+    "image": "/assets/grilled-cheeseburger.jpg",
     "shopId": 4
   },
   {
     "id": 19,
-    "name": "Popcorn",
+    "name": "Tuna Belly Steak",
     "price": 50,
-    "image": "/assets/popcorn.jpg",
+    "image": "/assets/tuna-belly-steak.jpg",
     "shopId": 4
   },
   {
     "id": 20,
-    "name": "Ice Cream",
+    "name": "Beef Tapa",
     "price": 45,
-    "image": "/assets/icecream.jpg",
+    "image": "/assets/beef-tapa.jpg",
     "shopId": 4
   },
-
   {
     "id": 21,
     "name": "Fish Balls",
@@ -178,36 +174,34 @@
     "image": "/assets/turon.jpg",
     "shopId": 5
   },
-
   {
     "id": 26,
-    "name": "Takoyaki (4 pcs)",
+    "name": "Wintermelon Milk Tea",
     "price": 80,
-    "image": "/assets/takoyaki.jpg",
+    "image": "/assets/wintermelon-milk-tea.jpg",
     "shopId": 6
   },
   {
     "id": 27,
-    "name": "Takoyaki (8 pcs)",
+    "name": "Matcha Milk Tea",
     "price": 140,
-    "image": "/assets/takoyaki.jpg",
+    "image": "/assets/matcha-milk-tea.jpg",
     "shopId": 6
   },
   {
     "id": 28,
-    "name": "Okonomiyaki",
+    "name": "Hokkaido Milk Tea",
     "price": 120,
-    "image": "/assets/okonomiyaki.jpg",
+    "image": "/assets/hokkaido-milk-tea.jpg",
     "shopId": 6
   },
   {
     "id": 29,
-    "name": "Yakisoba",
+    "name": "Strawberry Matcha Latte",
     "price": 110,
-    "image": "/assets/yakisoba.jpg",
+    "image": "/assets/strawberry-matcha-latte.jpg",
     "shopId": 6
   },
-
   {
     "id": 30,
     "name": "Pandesal",
