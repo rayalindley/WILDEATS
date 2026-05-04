@@ -3,32 +3,39 @@ import api from '../api/axios';
 const authService = {
   login: async (email, password) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data));
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+      });
+
+      const data = response.data;
+
+      if (data?.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data));
       }
-      return response.data;
+
+      return data;
     } catch (error) {
-      console.error('Login error:', error.response || error);
+      console.error('Login error:', error?.response?.data || error.message);
       throw error;
     }
   },
 
   register: async (userData) => {
     try {
-      console.log('Sending registration data:', userData);
       const response = await api.post('/auth/register', userData);
-      console.log('Registration response:', response.data);
-      
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data));
+
+      const data = response.data;
+
+      if (data?.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data));
       }
-      return response.data;
+
+      return data;
     } catch (error) {
-      console.error('Registration error:', error.response?.data || error.message);
-      console.error('Full error:', error);
+      console.error('Register error:', error?.response?.data || error.message);
       throw error;
     }
   },

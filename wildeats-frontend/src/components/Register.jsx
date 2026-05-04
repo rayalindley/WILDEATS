@@ -72,7 +72,7 @@ const Register = () => {
       console.log('Submitting registration:', cleanData);
       
       await authService.register(cleanData);
-      navigate('/dashboard');
+      navigate('/login');
     } catch (error) {
       console.error('Registration failed:', error);
       

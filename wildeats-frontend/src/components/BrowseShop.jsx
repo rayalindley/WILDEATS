@@ -1,16 +1,17 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
 
 const shops = [
-  { id:1, name:"The Canteen", cuisine:"Rice Meals · All-Day", description:"Your go-to for hearty Filipino comfort food. Hot meals served fresh every day.", emoji:"🍱", rating:4.8, reviewCount:312, deliveryTime:"10–15 min", isOpen:true, tag:"Best Seller", priceRange:"₱40–₱120", category:"Rice Meals", location:"Building A, Ground Floor" },
-  { id:2, name:"Munchies Corner", cuisine:"Snacks · Kakanin · Drinks", description:"Affordable snacks and local sweets perfect for those in-between class cravings.", emoji:"🧁", rating:4.7, reviewCount:198, deliveryTime:"5–10 min", isOpen:true, tag:"Student Fave", priceRange:"₱15–₱60", category:"Snacks", location:"Building B, Lobby" },
-  { id:3, name:"Brew & Bites", cuisine:"Coffee · Sandwiches · Pastries", description:"Artisan coffee and fresh sandwiches to power through your study sessions.", emoji:"☕", rating:4.9, reviewCount:445, deliveryTime:"8–12 min", isOpen:true, tag:"Top Rated", priceRange:"₱35–₱120", category:"Café", location:"Library Building, G/F" },
-  { id:4, name:"Grill House", cuisine:"BBQ · Isaw · Ihaw-Ihaw", description:"Classic Filipino street grill favorites. Perfectly charred, always satisfying.", emoji:"🍢", rating:4.6, reviewCount:267, deliveryTime:"15–20 min", isOpen:true, tag:"Open Late", priceRange:"₱10–₱80", category:"Grill", location:"Back Court Area" },
-  { id:5, name:"Noodle Bar", cuisine:"Mami · Pansit · Lugaw", description:"Warm noodle soups and stir-fries that hit different on a long school day.", emoji:"🍜", rating:4.5, reviewCount:153, deliveryTime:"10–18 min", isOpen:false, tag:"Opens 10AM", priceRange:"₱35–₱95", category:"Noodles", location:"Covered Court, Stall 3" },
-  { id:6, name:"Sip & Chill", cuisine:"Milk Tea · Fruit Shakes · Soda", description:"Cold drinks for hot days. Build your own milk tea or grab a fresh shake.", emoji:"🧋", rating:4.7, reviewCount:389, deliveryTime:"5–10 min", isOpen:true, tag:"Fan Favorite", priceRange:"₱30–₱85", category:"Drinks", location:"Building C, G/F" },
+  { id: 1, name: "The Canteen", cuisine: "Rice Meals · All-Day", description: "Your go-to for hearty Filipino comfort food. Hot meals served fresh every day.", emoji: "🍱", rating: 4.8, reviewCount: 312, deliveryTime: "10–15 min", isOpen: true, tag: "Best Seller", priceRange: "₱40–₱120", category: "Rice Meals", location: "Building A, Ground Floor" },
+  { id: 2, name: "Munchies Corner", cuisine: "Snacks · Kakanin · Drinks", description: "Affordable snacks and local sweets perfect for those in-between class cravings.", emoji: "🧁", rating: 4.7, reviewCount: 198, deliveryTime: "5–10 min", isOpen: true, tag: "Student Fave", priceRange: "₱15–₱60", category: "Snacks", location: "Building B, Lobby" },
+  { id: 3, name: "Brew & Bites", cuisine: "Coffee · Sandwiches · Pastries", description: "Artisan coffee and fresh sandwiches to power through your study sessions.", emoji: "☕", rating: 4.9, reviewCount: 445, deliveryTime: "8–12 min", isOpen: true, tag: "Top Rated", priceRange: "₱35–₱120", category: "Café", location: "Library Building, G/F" },
+  { id: 4, name: "Grill House", cuisine: "BBQ · Isaw · Ihaw-Ihaw", description: "Classic Filipino street grill favorites. Perfectly charred, always satisfying.", emoji: "🍢", rating: 4.6, reviewCount: 267, deliveryTime: "15–20 min", isOpen: true, tag: "Open Late", priceRange: "₱10–₱80", category: "Grill", location: "Back Court Area" },
+  { id: 5, name: "Noodle Bar", cuisine: "Mami · Pansit · Lugaw", description: "Warm noodle soups and stir-fries that hit different on a long school day.", emoji: "🍜", rating: 4.5, reviewCount: 153, deliveryTime: "10–18 min", isOpen: false, tag: "Opens 10AM", priceRange: "₱35–₱95", category: "Noodles", location: "Covered Court, Stall 3" },
+  { id: 6, name: "Sip & Chill", cuisine: "Milk Tea · Fruit Shakes · Soda", description: "Cold drinks for hot days. Build your own milk tea or grab a fresh shake.", emoji: "🧋", rating: 4.7, reviewCount: 389, deliveryTime: "5–10 min", isOpen: true, tag: "Fan Favorite", priceRange: "₱30–₱85", category: "Drinks", location: "Building C, G/F" },
 ];
 
-const CATS = ["All","Rice Meals","Snacks","Café","Grill","Noodles","Drinks"];
+const CATS = ["All", "Rice Meals", "Snacks", "Café", "Grill", "Noodles", "Drinks"];
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -29,22 +30,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#FAFAF8;color:#1C1C1C
 }
 .page{min-height:100vh;}
 .container{width:100%;max-width:1100px;margin:0 auto;padding:0 24px;}
-
-/* NAVBAR */
 .navbar{background:var(--red);padding:0;}
 .navbar::after{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--gold) 0%,transparent 100%);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px;}
-.logo{display:flex;align-items:center;gap:10px;font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;cursor:pointer;}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;cursor:pointer;text-decoration:none;}
 .logo-mark{background:var(--gold);color:var(--red);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .logo b{color:var(--gold);}
 .nav-links{display:flex;align-items:center;gap:4px;}
-.nav-link{color:rgba(255,255,255,.75);font-size:.85rem;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;transition:all var(--t);}
+.nav-link{color:rgba(255,255,255,.75);font-size:.85rem;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;transition:all var(--t);text-decoration:none;}
 .nav-link:hover,.nav-link.on{color:var(--gold);background:rgba(244,197,34,.1);}
 .cbadge{background:var(--gold);color:var(--red);font-size:.6rem;font-weight:900;min-width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-left:3px;}
 .nav-btn{background:var(--gold);color:var(--red);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;padding:9px 18px;border-radius:var(--r);cursor:pointer;transition:all var(--t);margin-left:8px;}
 .nav-btn:hover{background:var(--white);}
-
-/* BROWSE HEADER */
 .browse-header{background:var(--red);padding:38px 0 0;position:relative;overflow:hidden;}
 .browse-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 90% 50%,rgba(244,197,34,.15) 0%,transparent 55%);pointer-events:none;}
 .bh-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
@@ -59,9 +56,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#FAFAF8;color:#1C1C1C
 .search-input::placeholder{color:#bbb;}
 .search-input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(244,197,34,.2);}
 .search-clear{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem;padding:4px;border-radius:50%;transition:all var(--t);}
-.search-clear:hover{background:var(--border);}
-
-/* FILTER BAR */
 .filter-bar{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:rgba(255,255,255,.08);border-top:1px solid rgba(255,255,255,.1);padding:13px 24px;}
 .cats{display:flex;gap:7px;flex-wrap:wrap;}
 .cat-pill{font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:600;padding:6px 15px;border-radius:40px;border:1.5px solid rgba(255,255,255,.28);background:transparent;color:rgba(255,255,255,.72);cursor:pointer;transition:all var(--t);white-space:nowrap;}
@@ -73,15 +67,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#FAFAF8;color:#1C1C1C
 .thumb{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:transform var(--t);box-shadow:0 1px 4px rgba(0,0,0,.2);}
 .toggle.on .thumb{transform:translateX(18px);}
 .t-label{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.78);white-space:nowrap;}
-
-/* BODY */
 .browse-body{background:var(--cream);padding:60px 0 80px;}
 .result-count{font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:22px;letter-spacing:.06em;text-transform:uppercase;}
-
-/* GRID */
 .grid{display:grid;gap:20px;grid-template-columns:repeat(3,1fr);}
-
-/* STALL CARD */
 .stall-card{display:flex;flex-direction:column;background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
 .stall-card:not(.closed):hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);}
 .stall-card.closed{cursor:default;opacity:.72;filter:grayscale(.4);}
@@ -104,32 +92,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#FAFAF8;color:#1C1C1C
 .pills{display:flex;flex-wrap:wrap;gap:5px;}
 .pill{font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:20px;background:rgba(138,37,44,.07);color:var(--red);white-space:nowrap;}
 .pill-price{background:rgba(244,197,34,.15);color:var(--gold-dark);}
-.btn{display:inline-flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;padding:11px 20px;border-radius:var(--r);cursor:pointer;border:2px solid transparent;transition:all var(--t);margin-top:6px;width:100%;}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;padding:11px 20px;border-radius:var(--r);cursor:pointer;border:2px solid transparent;transition:all var(--t);margin-top:6px;width:100%;text-decoration:none;}
 .btn-red{background:var(--red);color:#fff;border-color:var(--red);}
 .btn-red:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 6px 18px rgba(138,37,44,.3);}
 .btn-dis{background:var(--border);color:var(--muted);border-color:var(--border);cursor:not-allowed;}
 .btn-outline{background:transparent;color:var(--red);border-color:var(--red);}
 .btn-outline:hover{background:var(--red);color:#fff;}
-
-/* EMPTY STATE */
 .empty{text-align:center;padding:80px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .empty-icon{font-size:3.5rem;}
 .empty-title{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;}
 .empty-sub{font-size:.88rem;color:var(--muted);}
-
 @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);}.search-wrap{width:100%;}.bh-inner{flex-direction:column;}}
-@media(max-width:540px){.grid{grid-template-columns:1fr;}.nav-link:not(.on):not(:last-child){display:none;}}
+@media(max-width:540px){.grid{grid-template-columns:1fr;}}
 `;
-
-function Stars({ r }) {
-  return <span className="stars">{"★".repeat(Math.floor(r))}{r%1>=.5?"½":""} <span className="rev">({r}) · {shops.find(s=>s.rating===r)?.reviewCount || ""} reviews</span></span>;
-}
 
 export default function BrowseStalls() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [openOnly, setOpenOnly] = useState(false);
-  const [toast, setToast] = useState(null);
+  const navigate = useNavigate();
 
   const filtered = useMemo(() => shops.filter(s => {
     const ms = s.name.toLowerCase().includes(search.toLowerCase()) || s.cuisine.toLowerCase().includes(search.toLowerCase());
@@ -142,23 +123,15 @@ export default function BrowseStalls() {
 
   const handleView = (shop) => {
     if (!shop.isOpen) return;
-    setToast(`Opening ${shop.name} menu…`);
-    setTimeout(() => setToast(null), 2000);
+    navigate(`/menu-list/${shop.id}`);
   };
 
   return (
     <>
       <style>{css}</style>
-      {toast && (
-        <div style={{position:'fixed',top:80,left:'50%',transform:'translateX(-50%)',background:'#1C1C1C',color:'#fff',padding:'12px 24px',borderRadius:12,fontWeight:600,fontSize:'.88rem',zIndex:9999,boxShadow:'0 8px 28px rgba(0,0,0,.25)',whiteSpace:'nowrap'}}>
-          {toast}
-        </div>
-      )}
       <div className="page">
-
         <Navbar />
 
-        {/* BROWSE HEADER */}
         <div className="browse-header">
           <div className="container">
             <div className="bh-inner">
@@ -185,22 +158,21 @@ export default function BrowseStalls() {
             <div className="filter-bar">
               <div className="cats">
                 {CATS.map(c => (
-                  <button key={c} className={`cat-pill${cat===c?" on":""}`} onClick={() => setCat(c)}>{c}</button>
+                  <button key={c} className={`cat-pill${cat === c ? " on" : ""}`} onClick={() => setCat(c)}>{c}</button>
                 ))}
               </div>
               <div className="toggle-wrap" onClick={() => setOpenOnly(!openOnly)}>
-                <div className={`toggle${openOnly?" on":""}`}><div className="thumb" /></div>
+                <div className={`toggle${openOnly ? " on" : ""}`}><div className="thumb" /></div>
                 <span className="t-label">Open only</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* BODY */}
         <div className="browse-body">
           <div className="container">
             <p className="result-count">
-              {filtered.length === 0 ? "No stalls found" : `${filtered.length} stall${filtered.length!==1?"s":""} found`}
+              {filtered.length === 0 ? "No stalls found" : `${filtered.length} stall${filtered.length !== 1 ? "s" : ""} found`}
             </p>
 
             {filtered.length === 0 ? (
@@ -208,14 +180,14 @@ export default function BrowseStalls() {
                 <div className="empty-icon">🍽️</div>
                 <h3 className="empty-title">No stalls match your search</h3>
                 <p className="empty-sub">Try a different keyword or reset the filters.</p>
-                <button className="btn btn-outline" style={{width:'auto',marginTop:8}} onClick={() => { setSearch(""); setCat("All"); setOpenOnly(false); }}>
+                <button className="btn btn-outline" style={{ width: 'auto', marginTop: 8 }} onClick={() => { setSearch(""); setCat("All"); setOpenOnly(false); }}>
                   Reset Filters
                 </button>
               </div>
             ) : (
               <div className="grid">
                 {filtered.map(shop => (
-                  <div key={shop.id} className={`stall-card${!shop.isOpen?" closed":""}`} onClick={() => handleView(shop)}>
+                  <div key={shop.id} className={`stall-card${!shop.isOpen ? " closed" : ""}`} onClick={() => handleView(shop)}>
                     <div className="stall-cover">
                       {!shop.isOpen && <div className="closed-overlay">Closed</div>}
                       <span className="badge">{shop.tag}</span>
@@ -227,13 +199,13 @@ export default function BrowseStalls() {
                           <div className="stall-name">{shop.name}</div>
                           <div className="stall-cuisine">{shop.cuisine}</div>
                         </div>
-                        <span className={`status ${shop.isOpen?"s-open":"s-closed"}`}>
+                        <span className={`status ${shop.isOpen ? "s-open" : "s-closed"}`}>
                           {shop.isOpen ? "Open" : "Closed"}
                         </span>
                       </div>
                       <p className="stall-desc">{shop.description}</p>
                       <div>
-                        <span className="stars">{"★".repeat(Math.floor(shop.rating))}{shop.rating%1>=.5?"½":""}</span>
+                        <span className="stars">{"★".repeat(Math.floor(shop.rating))}{shop.rating % 1 >= .5 ? "½" : ""}</span>
                         <span className="rev"> {shop.rating} · {shop.reviewCount} reviews</span>
                       </div>
                       <div className="pills">
@@ -242,7 +214,7 @@ export default function BrowseStalls() {
                         <span className="pill pill-price">{shop.priceRange}</span>
                       </div>
                       <button
-                        className={`btn ${shop.isOpen?"btn-red":"btn-dis"}`}
+                        className={`btn ${shop.isOpen ? "btn-red" : "btn-dis"}`}
                         disabled={!shop.isOpen}
                         onClick={e => { e.stopPropagation(); handleView(shop); }}
                       >

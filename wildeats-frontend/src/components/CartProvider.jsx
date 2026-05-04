@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
-export function CartProvider({ children }) {
+export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
@@ -29,12 +29,12 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const increaseQty = (id) => {
-    setCart(
-      cart.map((item) =>
+    setCart((prev) =>
+      prev.map((item) =>
         item.id === id
           ? { ...item, quantity: item.quantity + 1 }
           : item
@@ -43,15 +43,19 @@ export function CartProvider({ children }) {
   };
 
   const decreaseQty = (id) => {
-    setCart(
-      cart
+    setCart((prev) =>
+      prev
         .map((item) =>
           item.id === id
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
-        .filter(item => item.quantity > 0)
+        .filter((item) => item.quantity > 0)
     );
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   return (
@@ -61,12 +65,13 @@ export function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         increaseQty,
-        decreaseQty
+        decreaseQty,
+        clearCart,
       }}
     >
       {children}
     </CartContext.Provider>
   );
-}
+};
 
 export const useCart = () => useContext(CartContext);

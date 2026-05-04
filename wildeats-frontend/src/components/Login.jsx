@@ -36,7 +36,7 @@ const Login = () => {
 
     try {
       await authService.login(formData.email, formData.password);
-      navigate('/dashboard'); // Redirect to dashboard or home
+      navigate('/browse-shop');
     } catch (error) {
       if (error.response?.data) {
         if (typeof error.response.data === 'object') {

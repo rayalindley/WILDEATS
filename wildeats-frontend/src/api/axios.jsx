@@ -1,35 +1,39 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://localhost:8081/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to add token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// Attach token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
 
-// Response interceptor to handle errors
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// Better error handling (IMPORTANT FIX)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log("API ERROR:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+
+    // Only logout on REAL token issues
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
