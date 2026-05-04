@@ -1,48 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
+import orderService from "../services/orderService";
+import authService from "../services/authService";
 import "../App.css";
 import "../styles/MyOrders.css";
 
-const ordersData = [
-  {
-    id: 1,
-    shop: "Brew & Bites",
-    emoji: "☕",
-    items: [
-      { name: "Latte", qty: 1, price: 90 },
-      { name: "Sandwich", qty: 2, price: 120 }
-    ],
-    status: "Delivered",
-    date: "April 7, 2026",
-    total: 330
-  },
-  {
-    id: 2,
-    shop: "Grill House",
-    emoji: "🍢",
-    items: [
-      { name: "Isaw", qty: 5, price: 10 },
-      { name: "BBQ", qty: 2, price: 25 }
-    ],
-    status: "Preparing",
-    date: "April 8, 2026",
-    total: 100
-  },
-  {
-    id: 3,
-    shop: "Munchies Corner",
-    emoji: "🧁",
-    items: [
-      { name: "Kakanin", qty: 3, price: 20 }
-    ],
-    status: "Pending",
-    date: "April 8, 2026",
-    total: 60
-  }
-];
+const shopsMap = {
+  1: { name: "The Canteen", emoji: "🍱" },
+  2: { name: "Munchies Corner", emoji: "🧁" },
+  3: { name: "Brew & Bites", emoji: "☕" },
+  4: { name: "Grill House", emoji: "🍢" },
+  5: { name: "Noodle Bar", emoji: "🍜" },
+  6: { name: "Sip & Chill", emoji: "🧋" },
+};
 
 export default function MyOrders() {
-  const [orders] = useState(ordersData);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const currentUser = authService.getCurrentUser();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    const fetchOrders = async () => {
+      try {
+        const data = await orderService.getByUser(currentUser.id);
+        // Sort orders by newest first (descending by ID or createdAt)
+        setOrders(data.sort((a, b) => b.id - a.id));
+      } catch (err) {
+        console.error("Failed to load orders:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [currentUser, navigate]);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Just now";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="page">
@@ -52,49 +59,57 @@ export default function MyOrders() {
         <h1 className="orders-title">My Orders</h1>
         <p className="orders-sub">Track your recent food orders</p>
 
-        {orders.length === 0 ? (
+        {loading ? (
+          <div className="empty-orders">
+            <p>Loading your orders...</p>
+          </div>
+        ) : orders.length === 0 ? (
           <div className="empty-orders">
             <h3>No orders yet 🍽️</h3>
             <p>Start ordering your favorite meals!</p>
           </div>
         ) : (
           <div className="orders-list">
-            {orders.map((order) => (
-              <div key={order.id} className="order-card">
+            {orders.map((order) => {
+              const shopInfo = shopsMap[order.shopId] || { name: `Shop #${order.shopId}`, emoji: "🏪" };
 
-                {/* HEADER */}
-                <div className="order-header">
-                  <div className="order-shop">
-                    <span className="order-emoji">{order.emoji}</span>
-                    <div>
-                      <h3>{order.shop}</h3>
-                      <p>{order.date}</p>
+              return (
+                <div key={order.id} className="order-card">
+                  {/* HEADER */}
+                  <div className="order-header">
+                    <div className="order-shop">
+                      <span className="order-emoji">{shopInfo.emoji}</span>
+                      <div>
+                        <h3>{shopInfo.name}</h3>
+                        <p>{formatDate(order.createdAt)}</p>
+                      </div>
                     </div>
+
+                    <span className={`order-status ${(order.status || "PENDING").toLowerCase()}`}>
+                      {order.status || "PENDING"}
+                    </span>
                   </div>
 
-                  <span className={`order-status ${order.status.toLowerCase()}`}>
-                    {order.status}
-                  </span>
-                </div>
+                  {/* ITEMS */}
+                  <div className="order-items">
+                    {order.items?.map((item, i) => (
+                      <div key={i} className="order-item">
+                        <span>{item.itemName} x{item.quantity}</span>
+                        <span>₱{item.price * item.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                {/* ITEMS */}
-                <div className="order-items">
-                  {order.items.map((item, i) => (
-                    <div key={i} className="order-item">
-                      <span>{item.name} x{item.qty}</span>
-                      <span>₱{item.price * item.qty}</span>
-                    </div>
-                  ))}
+                  {/* FOOTER */}
+                  <div className="order-footer">
+                    <strong>Total: ₱{order.total}</strong>
+                    <button className="reorder-btn" onClick={() => navigate(`/menu-list/${order.shopId}`)}>
+                      Order Again
+                    </button>
+                  </div>
                 </div>
-
-                {/* FOOTER */}
-                <div className="order-footer">
-                  <strong>Total: ₱{order.total}</strong>
-                  <button className="reorder-btn">Reorder</button>
-                </div>
-
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
