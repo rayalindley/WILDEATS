@@ -2,7 +2,6 @@ package com.example.appdev.wildeats_backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users")
