@@ -10,6 +10,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import { CartProvider } from "./components/CartProvider";
 import MyOrders from './components/MyOrders';
+import AdminPanel from './components/AdminPanel';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/menu-list/:shopId" element={<MenuList />} />
           <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </CartProvider>
     </BrowserRouter>

@@ -1,67 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "./NavBar";
-import menuData from "../data/menu.json";
+import shopService from "../services/ShopService";
 import { useCart } from "./CartProvider";
 import reviewService from "../services/reviewService";
 import authService from "../services/authService";
 import "../styles/MenuList.css";
-
-const shops = [
-  { id: 1, name: "The Canteen", emoji: "🍱", cuisine: "Rice Meals · All-Day", tag: "Best Seller" },
-  { id: 2, name: "Munchies Corner", emoji: "🧁", cuisine: "Snacks · Kakanin · Drinks", tag: "Student Fave" },
-  { id: 3, name: "Brew & Bites", emoji: "☕", cuisine: "Coffee · Sandwiches · Pastries", tag: "Top Rated" },
-  { id: 4, name: "Grill House", emoji: "🍢", cuisine: "BBQ · Isaw · Ihaw-Ihaw", tag: "Open Late" },
-  { id: 5, name: "Noodle Bar", emoji: "🍜", cuisine: "Mami · Pansit · Lugaw", tag: "Opens 10AM" },
-  { id: 6, name: "Sip & Chill", emoji: "🧋", cuisine: "Milk Tea · Fruit Shakes · Soda", tag: "Fan Favorite" },
-  { id: 7, name: "Bread & Co", emoji: "🍞", cuisine: "Breads · Pastries · Cakes", tag: "Fresh Daily" },
-];
-
-const descriptions = {
-  1: "Tender chicken slow-cooked in soy sauce, vinegar, garlic, and bay leaves.",
-  2: "Rich and sour pork soup with fresh vegetables and tamarind broth.",
-  3: "Crispy golden fried chicken seasoned to perfection. Best paired with rice.",
-  4: "Juicy beef steak marinated in calamansi and soy sauce, topped with caramelized onions.",
-  5: "Fresh mixed vegetables stir-fried in garlic and oyster sauce.",
-  6: "Steaming white rice — the perfect companion to any viand.",
-  7: "Creamy coconut milk pudding topped with toasted coconut.",
-  8: "Soft and chewy cassava cake with a golden custard topping.",
-  9: "Sticky purple rice cake served with butter and grated coconut.",
-  10: "Deep-fried caramelized bananas on a stick. Sweet and crunchy.",
-  11: "Smooth and creamy classic milk tea with your choice of toppings.",
-  12: "Taro-flavored milk tea with a sweet, nutty taste.",
-  13: "Chilled brewed coffee sweetened to your taste.",
-  14: "Warm espresso with steamed milk. Rich and comforting.",
-  15: "Blended chocolate frappe — thick, creamy, and indulgent.",
-  16: "Sweet and smoky pork barbecue on a stick, chargrilled to perfection.",
-  17: "Inasal-style grilled chicken marinated in lemongrass and annatto.",
-  18: "Grilled beef patty with melted cheese on a toasted bun.",
-  19: "Grilled tuna belly steak seasoned with garlic and herbs.",
-  20: "Sweet cured beef tapa — great for any time of day.",
-  21: "Classic street-style fish balls with sweet or spicy sauce.",
-  22: "Orange-coated hard-boiled quail eggs, deep-fried with dipping sauce.",
-  23: "Chewy squid balls skewered on a stick with your choice of sauce.",
-  24: "Caramelized fried bananas on a stick. Sweet and crispy.",
-  25: "Crispy banana spring rolls with langka filling.",
-  26: "Refreshing wintermelon-flavored milk tea with subtle sweetness.",
-  27: "Premium matcha milk tea with a rich, earthy flavor.",
-  28: "Creamy Hokkaido-style milk tea with a smooth caramel finish.",
-  29: "A trendy blend of strawberry and matcha latte.",
-  30: "Freshly baked soft bread rolls. Best enjoyed warm.",
-  31: "Fluffy brioche-style bread topped with cheese and sugar.",
-  32: "Sweet bread roll with a buttery sugar filling.",
-  33: "Rich and moist chocolate cake slice.",
-};
-
-const emojiFallback = {
-  1: "🍗", 2: "🍲", 3: "🍗", 4: "🥩", 5: "🥦", 6: "🍚",
-  7: "🍮", 8: "🍰", 9: "🍡", 10: "🍌",
-  11: "🧋", 12: "🧋", 13: "☕", 14: "☕", 15: "🥤",
-  16: "🍖", 17: "🍗", 18: "🍔", 19: "🐟", 20: "🥩",
-  21: "🐟", 22: "🥚", 23: "🦑", 24: "🍌", 25: "🌯",
-  26: "🧋", 27: "🍵", 28: "🧋", 29: "🍓",
-  30: "🍞", 31: "🥐", 32: "🍞", 33: "🍫",
-};
 
 export default function MenuList() {
   const { shopId } = useParams();
@@ -75,9 +19,28 @@ export default function MenuList() {
   const [toast, setToast] = useState(null);
   const [loadingReviews, setLoadingReviews] = useState(false);
 
-  const shop = shops.find(s => s.id === Number(shopId));
-  const menu = menuData.filter(item => item.shopId === Number(shopId));
+  // New: fetch from API
+  const [shop, setShop] = useState(null);
+  const [menu, setMenu] = useState([]);
+  const [loadingShop, setLoadingShop] = useState(true);
+
   const currentUser = authService.getCurrentUser();
+
+  // Load shop and menu from API
+  useEffect(() => {
+    if (!shopId) return;
+    setLoadingShop(true);
+    Promise.all([
+      shopService.getShop(Number(shopId)),
+      shopService.getMenuByShop(Number(shopId)),
+    ])
+      .then(([shopData, menuData]) => {
+        setShop(shopData);
+        setMenu(menuData);
+      })
+      .catch(err => console.error("Failed to load shop/menu:", err))
+      .finally(() => setLoadingShop(false));
+  }, [shopId]);
 
   // Load all reviews for this shop on mount
   useEffect(() => {
@@ -163,6 +126,15 @@ export default function MenuList() {
     });
   };
 
+  if (loadingShop) return (
+    <div className="page">
+      <Navbar />
+      <div style={{ textAlign: "center", padding: "80px 24px", color: "var(--muted)" }}>
+        Loading shop...
+      </div>
+    </div>
+  );
+
   if (!shop) return (
     <div className="page">
       <Navbar />
@@ -227,12 +199,12 @@ export default function MenuList() {
                           }}
                         />
                         <div className="menu-img-fallback" style={{ display: "none" }}>
-                          {emojiFallback[item.id] || "🍽️"}
+                          {item.emoji || "🍽️"}
                         </div>
                       </div>
                       <div className="menu-body-card">
                         <div className="menu-name">{item.name}</div>
-                        <p className="menu-desc">{descriptions[item.id] || "A delicious campus favorite."}</p>
+                        <p className="menu-desc">{item.description || "A delicious campus favorite."}</p>
                         <div className="menu-footer">
                           <div>
                             <div className="menu-price">₱{item.price}</div>
@@ -283,7 +255,7 @@ export default function MenuList() {
                   return (
                     <div key={item.id} style={{ marginBottom: 32 }}>
                       <h3 style={{ fontFamily: "'Unbounded',sans-serif", fontSize: ".85rem", fontWeight: 900, color: "var(--text)", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                        {emojiFallback[item.id]} {item.name}
+                        {item.emoji || "🍽️"} {item.name}
                         <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 600, fontSize: ".72rem", color: "var(--muted)" }}>
                           ({itemReviews.length} review{itemReviews.length !== 1 ? "s" : ""})
                         </span>

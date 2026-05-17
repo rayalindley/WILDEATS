@@ -1,15 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
-
-const shops = [
-  { id: 1, name: "The Canteen", cuisine: "Rice Meals · All-Day", description: "Your go-to for hearty Filipino comfort food. Hot meals served fresh every day.", emoji: "🍱", rating: 4.8, reviewCount: 312, deliveryTime: "10–15 min", isOpen: true, tag: "Best Seller", priceRange: "₱40–₱120", category: "Rice Meals", location: "Building A, Ground Floor" },
-  { id: 2, name: "Munchies Corner", cuisine: "Snacks · Kakanin · Drinks", description: "Affordable snacks and local sweets perfect for those in-between class cravings.", emoji: "🧁", rating: 4.7, reviewCount: 198, deliveryTime: "5–10 min", isOpen: true, tag: "Student Fave", priceRange: "₱15–₱60", category: "Snacks", location: "Building B, Lobby" },
-  { id: 3, name: "Brew & Bites", cuisine: "Coffee · Sandwiches · Pastries", description: "Artisan coffee and fresh sandwiches to power through your study sessions.", emoji: "☕", rating: 4.9, reviewCount: 445, deliveryTime: "8–12 min", isOpen: true, tag: "Top Rated", priceRange: "₱35–₱120", category: "Café", location: "Library Building, G/F" },
-  { id: 4, name: "Grill House", cuisine: "BBQ · Isaw · Ihaw-Ihaw", description: "Classic Filipino street grill favorites. Perfectly charred, always satisfying.", emoji: "🍢", rating: 4.6, reviewCount: 267, deliveryTime: "15–20 min", isOpen: true, tag: "Open Late", priceRange: "₱10–₱80", category: "Grill", location: "Back Court Area" },
-  { id: 5, name: "Noodle Bar", cuisine: "Mami · Pansit · Lugaw", description: "Warm noodle soups and stir-fries that hit different on a long school day.", emoji: "🍜", rating: 4.5, reviewCount: 153, deliveryTime: "10–18 min", isOpen: false, tag: "Opens 10AM", priceRange: "₱35–₱95", category: "Noodles", location: "Covered Court, Stall 3" },
-  { id: 6, name: "Sip & Chill", cuisine: "Milk Tea · Fruit Shakes · Soda", description: "Cold drinks for hot days. Build your own milk tea or grab a fresh shake.", emoji: "🧋", rating: 4.7, reviewCount: 389, deliveryTime: "5–10 min", isOpen: true, tag: "Fan Favorite", priceRange: "₱30–₱85", category: "Drinks", location: "Building C, G/F" },
-];
+import shopService from "../services/ShopService";
 
 const CATS = ["All", "Rice Meals", "Snacks", "Café", "Grill", "Noodles", "Drinks"];
 
@@ -102,6 +94,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#FAFAF8;color:#1C1C1C
 .empty-icon{font-size:3.5rem;}
 .empty-title{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;}
 .empty-sub{font-size:.88rem;color:var(--muted);}
+.loading-center{text-align:center;padding:80px 24px;color:var(--muted);font-size:.9rem;}
 @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);}.search-wrap{width:100%;}.bh-inner{flex-direction:column;}}
 @media(max-width:540px){.grid{grid-template-columns:1fr;}}
 `;
@@ -110,14 +103,23 @@ export default function BrowseStalls() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [openOnly, setOpenOnly] = useState(false);
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    shopService.getAllShops()
+      .then(data => setShops(data))
+      .catch(err => console.error("Failed to load shops:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
   const filtered = useMemo(() => shops.filter(s => {
-    const ms = s.name.toLowerCase().includes(search.toLowerCase()) || s.cuisine.toLowerCase().includes(search.toLowerCase());
+    const ms = s.name.toLowerCase().includes(search.toLowerCase()) || (s.cuisine || "").toLowerCase().includes(search.toLowerCase());
     const mc = cat === "All" || s.category === cat;
     const mo = !openOnly || s.isOpen;
     return ms && mc && mo;
-  }), [search, cat, openOnly]);
+  }), [search, cat, openOnly, shops]);
 
   const openCount = shops.filter(s => s.isOpen).length;
 
@@ -125,6 +127,12 @@ export default function BrowseStalls() {
     if (!shop.isOpen) return;
     navigate(`/menu-list/${shop.id}`);
   };
+
+  // Build dynamic category list from DB shops
+  const categories = useMemo(() => {
+    const cats = new Set(shops.map(s => s.category).filter(Boolean));
+    return ["All", ...Array.from(cats)];
+  }, [shops]);
 
   return (
     <>
@@ -157,7 +165,7 @@ export default function BrowseStalls() {
 
             <div className="filter-bar">
               <div className="cats">
-                {CATS.map(c => (
+                {categories.map(c => (
                   <button key={c} className={`cat-pill${cat === c ? " on" : ""}`} onClick={() => setCat(c)}>{c}</button>
                 ))}
               </div>
@@ -171,59 +179,65 @@ export default function BrowseStalls() {
 
         <div className="browse-body">
           <div className="container">
-            <p className="result-count">
-              {filtered.length === 0 ? "No stalls found" : `${filtered.length} stall${filtered.length !== 1 ? "s" : ""} found`}
-            </p>
-
-            {filtered.length === 0 ? (
-              <div className="empty">
-                <div className="empty-icon">🍽️</div>
-                <h3 className="empty-title">No stalls match your search</h3>
-                <p className="empty-sub">Try a different keyword or reset the filters.</p>
-                <button className="btn btn-outline" style={{ width: 'auto', marginTop: 8 }} onClick={() => { setSearch(""); setCat("All"); setOpenOnly(false); }}>
-                  Reset Filters
-                </button>
-              </div>
+            {loading ? (
+              <div className="loading-center">Loading stalls...</div>
             ) : (
-              <div className="grid">
-                {filtered.map(shop => (
-                  <div key={shop.id} className={`stall-card${!shop.isOpen ? " closed" : ""}`} onClick={() => handleView(shop)}>
-                    <div className="stall-cover">
-                      {!shop.isOpen && <div className="closed-overlay">Closed</div>}
-                      <span className="badge">{shop.tag}</span>
-                      <div className="stall-emoji">{shop.emoji}</div>
-                    </div>
-                    <div className="stall-body">
-                      <div className="stall-top">
-                        <div>
-                          <div className="stall-name">{shop.name}</div>
-                          <div className="stall-cuisine">{shop.cuisine}</div>
-                        </div>
-                        <span className={`status ${shop.isOpen ? "s-open" : "s-closed"}`}>
-                          {shop.isOpen ? "Open" : "Closed"}
-                        </span>
-                      </div>
-                      <p className="stall-desc">{shop.description}</p>
-                      <div>
-                        <span className="stars">{"★".repeat(Math.floor(shop.rating))}{shop.rating % 1 >= .5 ? "½" : ""}</span>
-                        <span className="rev"> {shop.rating} · {shop.reviewCount} reviews</span>
-                      </div>
-                      <div className="pills">
-                        <span className="pill">🕐 {shop.deliveryTime}</span>
-                        <span className="pill">📍 {shop.location}</span>
-                        <span className="pill pill-price">{shop.priceRange}</span>
-                      </div>
-                      <button
-                        className={`btn ${shop.isOpen ? "btn-red" : "btn-dis"}`}
-                        disabled={!shop.isOpen}
-                        onClick={e => { e.stopPropagation(); handleView(shop); }}
-                      >
-                        {shop.isOpen ? "View Menu →" : "Currently Closed"}
-                      </button>
-                    </div>
+              <>
+                <p className="result-count">
+                  {filtered.length === 0 ? "No stalls found" : `${filtered.length} stall${filtered.length !== 1 ? "s" : ""} found`}
+                </p>
+
+                {filtered.length === 0 ? (
+                  <div className="empty">
+                    <div className="empty-icon">🍽️</div>
+                    <h3 className="empty-title">No stalls match your search</h3>
+                    <p className="empty-sub">Try a different keyword or reset the filters.</p>
+                    <button className="btn btn-outline" style={{ width: 'auto', marginTop: 8 }} onClick={() => { setSearch(""); setCat("All"); setOpenOnly(false); }}>
+                      Reset Filters
+                    </button>
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <div className="grid">
+                    {filtered.map(shop => (
+                      <div key={shop.id} className={`stall-card${!shop.isOpen ? " closed" : ""}`} onClick={() => handleView(shop)}>
+                        <div className="stall-cover">
+                          {!shop.isOpen && <div className="closed-overlay">Closed</div>}
+                          <span className="badge">{shop.tag}</span>
+                          <div className="stall-emoji">{shop.emoji}</div>
+                        </div>
+                        <div className="stall-body">
+                          <div className="stall-top">
+                            <div>
+                              <div className="stall-name">{shop.name}</div>
+                              <div className="stall-cuisine">{shop.cuisine}</div>
+                            </div>
+                            <span className={`status ${shop.isOpen ? "s-open" : "s-closed"}`}>
+                              {shop.isOpen ? "Open" : "Closed"}
+                            </span>
+                          </div>
+                          <p className="stall-desc">{shop.description}</p>
+                          <div>
+                            <span className="stars">{"★".repeat(Math.floor(shop.rating || 0))}{(shop.rating || 0) % 1 >= .5 ? "½" : ""}</span>
+                            <span className="rev"> {shop.rating} · {shop.reviewCount} reviews</span>
+                          </div>
+                          <div className="pills">
+                            <span className="pill">🕐 {shop.deliveryTime}</span>
+                            <span className="pill">📍 {shop.location}</span>
+                            <span className="pill pill-price">{shop.priceRange}</span>
+                          </div>
+                          <button
+                            className={`btn ${shop.isOpen ? "btn-red" : "btn-dis"}`}
+                            disabled={!shop.isOpen}
+                            onClick={e => { e.stopPropagation(); handleView(shop); }}
+                          >
+                            {shop.isOpen ? "View Menu →" : "Currently Closed"}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

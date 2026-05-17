@@ -1,11 +1,20 @@
-// // import axios from "axios";
+import api from '../api/axios';
 
-// const API_URL = "http://localhost:8080/api/products"; // your Spring Boot endpoint
+const shopService = {
+  getAllShops: async () => {
+    const response = await api.get('/shops');
+    return response.data;
+  },
 
-// class ShopService {
-//   getAllProducts() {
-//     return axios.get(API_URL);
-//   }
-// }
+  getShop: async (id) => {
+    const response = await api.get(`/shops/${id}`);
+    return response.data;
+  },
 
-// export default new ShopService();
+  getMenuByShop: async (shopId) => {
+    const response = await api.get(`/menus/shop/${shopId}`);
+    return response.data;
+  },
+};
+
+export default shopService;
